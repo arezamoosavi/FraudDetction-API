@@ -13,11 +13,11 @@ while [ $n -gt 0 ]
 do
 	echo "Wait for cassandra $n more times."
 	n=$(( n-1 ))
-    sleep 5
+    sleep 10
 done
 
 
-while python db_connect.py; do echo 'connecting to database...'; sleep 2; done;
+while python checkDbConnect.py; do echo 'connecting to database...'; sleep 2; done;
 
 echo ". . . . . Database Connection Is Done! . . . . ."
 

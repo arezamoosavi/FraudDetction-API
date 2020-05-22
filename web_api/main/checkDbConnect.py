@@ -10,9 +10,11 @@ logging.basicConfig(filename='dblogs.log',
 async def main():
 
     cassandra = Cassandra()
-    asyncio.sleep(0.1)
+    await asyncio.sleep(0.001)
 
     logging.info('Connedted to Cassandra')
+    cassandra.disconnect()
+    logging.info('dis_connedted to Cassandra')
 
 
 if __name__ == "__main__":
