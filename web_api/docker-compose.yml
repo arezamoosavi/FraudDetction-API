@@ -58,9 +58,9 @@ services:
   redis:
     image: redis:5.0.5
     ports:
-      - "6380:6379"
+      - "6385:6379"
     expose:
-      - "6379"
+      - "6385"
     command: [ "redis-server", "--protected-mode", "no" ]
     hostname: redis
     restart: unless-stopped

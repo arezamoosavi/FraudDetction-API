@@ -25,7 +25,7 @@ do
 done
 
 
-while python db_connect.py; do echo 'connecting to database...'; sleep 2; done;
+while python checkDbConnect.py; do echo 'connecting to database...'; sleep 2; done;
 
 echo ". . . . . Database Connection Is Done! . . . . ."
 

@@ -230,3 +230,4 @@ pip-selfcheck.json
 \.vscode/
 
 # not
+web_api/main/test_app-data
