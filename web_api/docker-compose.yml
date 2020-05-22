@@ -1,0 +1,132 @@
+version: '3'
+
+services:
+
+  web: &basePy
+    build:
+      context: .
+      dockerfile: ./dockerfiles/py/Dockerfile
+    volumes:
+      - ./main:/main
+      - static_files:/static_files
+      - uploaded_files:/uploaded_files
+    env_file:
+      - ./.envs/.pyenvs
+    depends_on:
+      - node_0
+      - node_1
+      - kafka
+      - redis
+      - kafka-create-topics
+    links:
+      - node_0
+      - node_1
+      - kafka
+      - redis
+    restart: unless-stopped
+    command: sh /bootWeb.sh
+
+  faust:
+    <<: *basePy
+    command: sh /bootFaust.sh
+    restart: "no"
+
+    
+  node_0:
+    image: cassandra:2.2.0
+    restart: unless-stopped
+    ports:
+      - '10042:9042'
+    environment:
+      - CASSANDRA_CLUSTER_NAME=Mycluster
+      - CASSANDRA_SEEDS=node_0, node_1
+      - CASSANDRA_LISTEN_ADDRESS=node_0
+    links:
+      - node_1
+
+  node_1:
+    image: cassandra:2.2.0
+    restart: unless-stopped
+    ports:
+      - '11042:9042'
+    environment:
+      - CASSANDRA_CLUSTER_NAME=Mycluster
+      - CASSANDRA_SEEDS=node_0, node_1
+      - CASSANDRA_LISTEN_ADDRESS=node_1
+
+
+  redis:
+    image: redis:5.0.5
+    ports:
+      - "6380:6379"
+    expose:
+      - "6379"
+    command: [ "redis-server", "--protected-mode", "no" ]
+    hostname: redis
+    restart: unless-stopped
+
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/nginx/Dockerfile
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+    volumes:
+      - static_files:/static_files
+      - uploaded_files:/uploaded_files
+    depends_on:
+      - web
+    restart: unless-stopped
+
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.2.0
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    expose:
+      - "2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:5.2.0
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    expose:
+      - "9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
+
+  kafka-create-topics:
+    image: confluentinc/cp-kafka:5.2.0
+    depends_on:
+      - kafka
+    hostname: kafka-create-topics
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b kafka:9092 1 20 && \
+                       kafka-topics --create --topic test --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 && \
+                       sleep infinity'"
+    environment:
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+    restart: unless-stopped
+
+
+volumes:
+  static_files:
+  uploaded_files:
