@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.2.0
+    image: wurstmeister/zookeeper
     expose:
       - "2181"
     logging:
