@@ -5,6 +5,5 @@ docker pull wurstmeister/zookeeper
 
 
 
-
 docker build -t jp .
-docker run -p 8888:8888 jp
+docker run --rm --name jupython -p 8888:8888 jp

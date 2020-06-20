@@ -34,7 +34,11 @@ RUN conda install pytorch torchvision cpuonly -c pytorch
 
 
 
-COPY ./dockerfiles/ai_ml/run_spark_app.sh /run.sh
-RUN chmod +x /run.sh
+# COPY ./dockerfiles/ai_ml/run_spark_app.sh /run.sh
+# RUN chmod +x /run.sh
 
 # CMD ["/run.sh"]
+
+RUN mkdir -p /main
+WORKDIR /main
+COPY notebook.ipynb /notebook.ipynb
