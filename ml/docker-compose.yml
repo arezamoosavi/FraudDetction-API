@@ -1,18 +1,26 @@
 version: "3"
 
 services:
-  ai_ml:
+  # ai_ml:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/ai_ml/Dockerfile
+  #   volumes:
+  #     - .:/main
+  #   ports:
+  #     - "8888:8888"
+  #     - "4040:4040"
+  #     - "4041:4041"
+  #   restart: unless-stopped
+  pynotebook:
     build:
       context: .
-      dockerfile: ./dockerfiles/ai_ml/Dockerfile
+      dockerfile: ./dockerfiles/pythonic/Dockerfile
     volumes:
-      - .:/main
-    # env_file:
-    #   - ./dockerfiles/ai_ml/.env
+      - ./main:/main
     ports:
       - "8888:8888"
       - "4040:4040"
-      - "4041:4041"
     restart: unless-stopped
   # zookeeper:
   #   image: wurstmeister/zookeeper

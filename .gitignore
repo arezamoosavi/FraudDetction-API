@@ -234,4 +234,4 @@ web_api/main/test_app-data
 .mypy_cache
 .vscode
 handyscript
-ml/creditcard.csv
+ml/main/creditcard.csv
