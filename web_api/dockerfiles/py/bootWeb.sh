@@ -13,18 +13,12 @@ while [ $n -gt 0 ]
 do
 	echo "Wait for cassandra $n more times."
 	n=$(( n-1 ))
-    sleep 10
+    sleep 5
 done
-
-
-while python checkDbConnect.py; do echo 'connecting to database...'; sleep 2; done;
-
-echo ". . . . . Database Connection Is Done! . . . . ."
-
 
 
 echo ". . . . . Web Boot Up Is Done! . . . . ."
 
-uvicorn bootUp:app --host ${HOST} --port ${PORT} --reload --ws 'auto' --loop 'auto' --workers 8
+uvicorn run_app:app --host ${HOST} --port ${PORT} --reload --ws 'auto' --loop 'auto' --workers 8
 
 exec "$@"

@@ -23,17 +23,15 @@ RUN pip install --upgrade pip
 COPY requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt
 
+RUN pip install --no-cache-dir jupyterlab
+
 RUN mkdir -p /main
 
 WORKDIR /main
 
-COPY ./dockerfiles/py/bootFaust.sh /bootFaust.sh
-RUN chmod +x /bootFaust.sh
-
 COPY ./dockerfiles/py/bootWeb.sh /bootWeb.sh
 RUN chmod +x /bootWeb.sh
 
-COPY ./dockerfiles/py/run.sh /run.sh
-RUN chmod +x /run.sh
-
-CMD ["/run.sh"]
+# Jupyter
+COPY ./dockerfiles/py/jupyter_run.sh /jupyter_run.sh
+RUN chmod +x /jupyter_run.sh
