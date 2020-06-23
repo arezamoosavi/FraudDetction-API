@@ -25,6 +25,8 @@ RUN pip install --no-cache-dir -r /requirements.txt
 
 RUN pip install --no-cache-dir jupyterlab
 
+RUN pip install scikit-learn
+
 RUN mkdir -p /main
 
 WORKDIR /main

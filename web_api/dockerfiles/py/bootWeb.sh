@@ -19,6 +19,7 @@ done
 
 echo ". . . . . Web Boot Up Is Done! . . . . ."
 
-uvicorn run_app:app --host ${HOST} --port ${PORT} --reload --ws 'auto' --loop 'auto' --workers 8
+uvicorn run_app:app --host ${HOST} --port ${PORT} --reload --ws 'auto' \
+--loop 'auto' --workers 8
 
 exec "$@"
