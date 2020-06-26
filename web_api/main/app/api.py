@@ -52,6 +52,8 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
+        # data shape: 29 float number with , seperator
+        # ex: 7,8,9,5
         ndata = [float(number) for number in data.split(",")]
 
         result = clf.predict([ndata])

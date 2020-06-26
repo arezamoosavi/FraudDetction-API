@@ -4,6 +4,3 @@ HOST=0.0.0.0
 CASSANDRA_USER=cassandra
 CASSANDRA_PASSWORD=cassandra
 CASSANDRA_KEY_SPACE=test_key_space
-
-REDIS_SERVER=redis://redis:6385/0
-KAFKA_SERVER=kafka://kafka:9092
