@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from joblib import load
 from app.db import models
 
+
 clf = load("app/forest_model.joblib")
 
 router = APIRouter()
