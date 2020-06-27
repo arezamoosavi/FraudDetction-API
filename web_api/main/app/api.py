@@ -1,6 +1,7 @@
 from fastapi import APIRouter, WebSocket
 from fastapi.responses import HTMLResponse
 from joblib import load
+from app.db import models
 
 clf = load("app/forest_model.joblib")
 
@@ -54,12 +55,21 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         # data shape: 29 float number with , seperator
         # ex: 7,8,9,5
-        ndata = [float(number) for number in data.split(",")]
 
-        result = clf.predict([ndata])
-        if result[0] == 0:
-            response = "Not Fraud!"
-        else:
-            response = "A Fraud!"
+        try:
+            ndata = [float(number) for number in data.split(",")]
+            if len(ndata) != 29:
+                await websocket.send_text(f"This Data is: not valid")
+            result = clf.predict([ndata])
+            if result[0] == 0:
+                response = "Not Fraud!"
+                new_result = models.result(data=ndata, is_fraud=False)
+            else:
+                response = "A Fraud!"
+                new_result = models.result(data=ndata, is_fraud=True)
 
-        await websocket.send_text(f"Message text was: {response}")
+            new_result.save()
+            await websocket.send_text(f"This Data is: {response}")
+        except Exception as e:
+            await websocket.send_text(f"This Data is: {e}")
+
