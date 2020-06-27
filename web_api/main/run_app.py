@@ -37,12 +37,12 @@ async def create_item(sent_data: DataModel):
         result = clf.predict([sent_data.data])
         if result[0] == 0:
             response = "Not Fraud!"
-            new_result = models.results(data=[sent_data.data], is_fraud=False)
-            print(new_result.items())
-            new_result.save()
+            new_result = models.result(data=sent_data.data, is_fraud=False)
         else:
             response = "A Fraud!"
-            new_result = models.results(data=[sent_data.data], is_fraud=True)
+            new_result = models.result(data=sent_data.data, is_fraud=True)
+
+        new_result.save()
 
     except Exception as e:
         print("EXECPTION: ", e)
