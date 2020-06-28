@@ -1,0 +1,8 @@
+starlette
+uvicorn
+fastapi
+joblib
+pydantic==1.5.1
+cassandra-driver==3.14.0
+cqlsh==5.0.4
+cqlengine==0.21.0
